@@ -8,11 +8,21 @@ export const axiosInstance = axios.create({
     Authorization: `Bearer ${token}`,
   },
 });
-console.log('Token:', token);
 
+export interface Note {
+  _id: string;
+  title: string;
+  content: string;
+  tag: string;
+}
 
+export interface FetchNotesResponse {
+  notes: Note[];
+  totalPages: number;
+  page: number;
+}
 
-export const fetchNotes = async (page = 1, search = '') => {
+export const fetchNotes = async (page = 1, search = ''): Promise<FetchNotesResponse> => {
   const response = await axiosInstance.get('/notes', {
     params: {
       page,
@@ -23,7 +33,6 @@ export const fetchNotes = async (page = 1, search = '') => {
   return response.data;
 };
 
-
 export const createNote = async (noteData: {
   title: string;
   content: string;
@@ -32,7 +41,6 @@ export const createNote = async (noteData: {
   const response = await axiosInstance.post('/notes', noteData);
   return response.data;
 };
-
 
 export const deleteNote = async (noteId: string) => {
   const response = await axiosInstance.delete(`/notes/${noteId}`);

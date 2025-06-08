@@ -25,7 +25,7 @@ function AppContent() {
 
   const { data, isLoading, isError, error } = useQuery<FetchNotesResponse, Error>({
     queryKey: ['notes', debouncedSearch, page],
-    queryFn: () => fetchNotes(debouncedSearch, page),
+    queryFn: () => fetchNotes(page, debouncedSearch), // ✅ ПРАВИЛЬНИЙ ПОРЯДОК
     placeholderData: keepPreviousData,
   });
 
@@ -33,7 +33,7 @@ function AppContent() {
     <div className={css.app}>
       <header className={css.toolbar}>
         <SearchBox value={search} onChange={handleSearchChange} />
-        {data && data.totalPages && data.totalPages > 1 && (
+        {data && data.totalPages > 1 && (
           <Pagination
             pageCount={data.totalPages}
             currentPage={page}
@@ -46,9 +46,7 @@ function AppContent() {
       </header>
       {isLoading && <Loader />}
       {isError && <Error message={error?.message || ''} />}
-      {data && data.notes && (
-        <NoteList notes={data.notes} />
-      )}
+      {data && data.notes.length > 0 && <NoteList notes={data.notes} />}
       {isModalOpen && <NoteModal onClose={() => setIsModalOpen(false)} />}
     </div>
   );
