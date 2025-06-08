@@ -1,13 +1,11 @@
-import axios, { AxiosResponse } from 'axios';
-import { Note } from '../types/note';
+import axios from 'axios';
 
-const BASE_URL = 'https://notehub-public.goit.study/api/notes';
-const TOKEN = import.meta.env.VITE_NOTEHUB_TOKEN;
+const token = import.meta.env.VITE_NOTEHUB_TOKEN;
 
-const axiosInstance = axios.create({
-  baseURL: BASE_URL,
+export const noteApi = axios.create({
+  baseURL: 'https://notehub-public.goit.study/api',
   headers: {
-    Authorization: `Bearer ${TOKEN}`,
+    Authorization: `Bearer ${token}`,
   },
 });
 
