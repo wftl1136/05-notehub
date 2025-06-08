@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { QueryClient, QueryClientProvider, useQuery, keepPreviousData } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 import css from './App.module.css';
 import SearchBox from '../SearchBox/SearchBox';
 import Pagination from '../Pagination/Pagination';
@@ -9,8 +9,6 @@ import { fetchNotes, FetchNotesResponse } from '../../services/noteService';
 import { useDebounce } from 'use-debounce';
 import Loader from '../Loader/Loader';
 import Error from '../Error/Error';
-
-const queryClient = new QueryClient();
 
 function AppContent() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -25,8 +23,8 @@ function AppContent() {
 
   const { data, isLoading, isError, error } = useQuery<FetchNotesResponse, Error>({
     queryKey: ['notes', debouncedSearch, page],
-    queryFn: () => fetchNotes(page, debouncedSearch), // ✅ ПРАВИЛЬНИЙ ПОРЯДОК
-    placeholderData: keepPreviousData,
+    queryFn: () => fetchNotes(page, debouncedSearch),
+    keepPreviousData: true, // ВАЖНО: здесь true вместо placeholderData
   });
 
   return (
@@ -52,12 +50,4 @@ function AppContent() {
   );
 }
 
-function App() {
-  return (
-    <QueryClientProvider client={queryClient}>
-      <AppContent />
-    </QueryClientProvider>
-  );
-}
-
-export default App;
+export default AppContent;

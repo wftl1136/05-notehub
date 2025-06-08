@@ -4,7 +4,6 @@ import { Note } from '../../types/note';
 import css from './NoteForm.module.css';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { createNote, CreateNoteDto } from '../../services/noteService';
-import { useState } from 'react';
 
 export interface NoteFormValues {
   title: string;
@@ -30,7 +29,7 @@ const initialValues: NoteFormValues = {
 
 function NoteForm({ onCancel }: NoteFormProps) {
   const queryClient = useQueryClient();
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = React.useState<string | null>(null);
 
   const mutation = useMutation<Note, Error, CreateNoteDto>({
     mutationFn: createNote,
@@ -52,7 +51,7 @@ function NoteForm({ onCancel }: NoteFormProps) {
       const fixedTag = (values.tag.charAt(0).toUpperCase() + values.tag.slice(1).toLowerCase()) as Note['tag'];
       const { title, content } = values;
       await mutation.mutateAsync({ title, content, tag: fixedTag });
-    } catch (err) {
+    } catch {
       helpers.setSubmitting(false);
     }
   };
@@ -101,4 +100,4 @@ function NoteForm({ onCancel }: NoteFormProps) {
   );
 }
 
-export default NoteForm; 
+export default NoteForm;
