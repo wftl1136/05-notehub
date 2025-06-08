@@ -1,6 +1,5 @@
 import axios from 'axios';
 
-// Твій токен має бути у файлі .env як VITE_NOTEHUB_TOKEN
 const token = import.meta.env.VITE_NOTEHUB_TOKEN;
 
 export const axiosInstance = axios.create({
@@ -9,8 +8,10 @@ export const axiosInstance = axios.create({
     Authorization: `Bearer ${token}`,
   },
 });
+console.log('Token:', token);
 
-// Отримати список нотаток
+
+
 export const fetchNotes = async (page = 1, search = '') => {
   const response = await axiosInstance.get('/notes', {
     params: {
@@ -22,7 +23,7 @@ export const fetchNotes = async (page = 1, search = '') => {
   return response.data;
 };
 
-// Створити нову нотатку
+
 export const createNote = async (noteData: {
   title: string;
   content: string;
@@ -32,7 +33,7 @@ export const createNote = async (noteData: {
   return response.data;
 };
 
-// Видалити нотатку
+
 export const deleteNote = async (noteId: string) => {
   const response = await axiosInstance.delete(`/notes/${noteId}`);
   return response.data;
