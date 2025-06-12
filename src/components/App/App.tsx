@@ -5,7 +5,8 @@ import SearchBox from '../SearchBox/SearchBox';
 import Pagination from '../Pagination/Pagination';
 import NoteList from '../NoteList/NoteList';
 import NoteModal from '../NoteModal/NoteModal';
-import { fetchNotes, FetchNotesResponse } from '../../services/noteService';
+import { fetchNotes } from '../../services/noteService';
+import {  FetchNotesResponse } from '../../services/noteService';
 import { useDebounce } from 'use-debounce';
 import Loader from '../Loader/Loader';
 import Error from '../Error/Error';
@@ -23,8 +24,13 @@ function AppContent() {
 
   const { data, isLoading, isError, error } = useQuery<FetchNotesResponse, Error>({
     queryKey: ['notes', debouncedSearch, page],
-    queryFn: () => fetchNotes(page, debouncedSearch),
-    keepPreviousData: true, // ВАЖНО: здесь true вместо placeholderData
+    queryFn: () => fetchNotes({ page, search: debouncedSearch }), // передаем объект с параметрами
+    keepPreviousData: true,  // оставляем для плавной пагинации
+    placeholderData: {
+      notes: [],
+      totalPages: 0,
+      page: 1,
+    }, // добавлено для placeholderData
   });
 
   return (
