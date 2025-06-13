@@ -1,11 +1,8 @@
 // === src/services/noteService.ts ===
 
 import axios from 'axios';
-import type {
-  Note,
-  FetchNotesResponse,
-  FetchNotesParams,
-} from '../types/note';
+import { FetchNotesParams, FetchNotesResponse } from '../types/api';
+import { Note } from '../types/note';
 
 const token = import.meta.env.VITE_NOTEHUB_TOKEN;
 
@@ -17,7 +14,7 @@ export const axiosInstance = axios.create({
 });
 
 // Изменено: fetchNotes теперь принимает объект с параметрами и имеет явные типы
-export const fetchNotes = async ({
+ export const fetchNotes = async ({
   page = 1,
   search = '',
 }: FetchNotesParams): Promise<FetchNotesResponse> => {
@@ -41,8 +38,7 @@ export const createNote = async (noteData: {
   return response.data;
 };
 
-// Изменено: noteId - number, добавлен generic для типа возвращаемых данных
-export const deleteNote = async (noteId: number): Promise<{ success: boolean }> => {
-  const response = await axiosInstance.delete<{ success: boolean }>(`/notes/${noteId}`);
+export const deleteNote = async (noteId: number): Promise<Note> => {
+  const response = await axiosInstance.delete<Note>(`/notes/${noteId}`);
   return response.data;
 };

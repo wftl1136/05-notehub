@@ -1,12 +1,12 @@
 import { useState } from 'react';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, keepPreviousData } from '@tanstack/react-query'; // ✅ Імпорт функції
 import css from './App.module.css';
 import SearchBox from '../SearchBox/SearchBox';
 import Pagination from '../Pagination/Pagination';
 import NoteList from '../NoteList/NoteList';
 import NoteModal from '../NoteModal/NoteModal';
 import { fetchNotes } from '../../services/noteService';
-import {  FetchNotesResponse } from '../../services/noteService';
+import type { FetchNotesResponse } from '../../types/api'; // ✅ Краще імпортувати з types
 import { useDebounce } from 'use-debounce';
 import Loader from '../Loader/Loader';
 import Error from '../Error/Error';
@@ -24,14 +24,13 @@ function AppContent() {
 
   const { data, isLoading, isError, error } = useQuery<FetchNotesResponse, Error>({
     queryKey: ['notes', debouncedSearch, page],
-    queryFn: () => fetchNotes({ page, search: debouncedSearch }), // передаем объект с параметрами
-    keepPreviousData: true,  // оставляем для плавной пагинации
-    placeholderData: {
-      notes: [],
-      totalPages: 0,
-      page: 1,
-    }, // добавлено для placeholderData
+    queryFn: () => fetchNotes({ page, search: debouncedSearch }),
+    placeholderData: keepPreviousData, // ✅ ПРАВИЛЬНО
   });
+
+  const handlePageChange = (selectedPage: number) => {
+    setPage(selectedPage);
+  };
 
   return (
     <div className={css.app}>
@@ -41,7 +40,7 @@ function AppContent() {
           <Pagination
             pageCount={data.totalPages}
             currentPage={page}
-            onPageChange={setPage}
+            onPageChange={handlePageChange} // ✅ Явно типізована функція
           />
         )}
         <button className={css.button} onClick={() => setIsModalOpen(true)}>
