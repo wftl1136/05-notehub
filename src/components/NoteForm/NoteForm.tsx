@@ -3,7 +3,8 @@ import * as Yup from 'yup';
 import { Note } from '../../types/note';
 import css from './NoteForm.module.css';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { createNote, CreateNoteDto } from '../../services/noteService';
+import { createNote } from '../../services/noteService';
+import { useState } from 'react';
 
 export interface NoteFormValues {
   title: string;
@@ -29,9 +30,9 @@ const initialValues: NoteFormValues = {
 
 function NoteForm({ onCancel }: NoteFormProps) {
   const queryClient = useQueryClient();
-  const [error, setError] = React.useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
-  const mutation = useMutation<Note, Error, CreateNoteDto>({
+  const mutation = useMutation({
     mutationFn: createNote,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['notes'] });

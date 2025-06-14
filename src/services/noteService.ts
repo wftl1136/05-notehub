@@ -1,4 +1,3 @@
-// === src/services/noteService.ts ===
 
 import axios from 'axios';
 import { FetchNotesParams, FetchNotesResponse } from '../types/api';
@@ -13,7 +12,7 @@ export const axiosInstance = axios.create({
   },
 });
 
-// Изменено: fetchNotes теперь принимает объект с параметрами и имеет явные типы
+
  export const fetchNotes = async ({
   page = 1,
   search = '',
@@ -22,13 +21,13 @@ export const axiosInstance = axios.create({
     params: {
       page,
       perPage: 12,
-      search,
+     ...(search !== "" && { search: search }),
     },
   });
   return response.data;
 };
 
-// Добавлен generic <Note>, явно указан тип возвращаемого значения
+
 export const createNote = async (noteData: {
   title: string;
   content: string;
